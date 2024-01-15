@@ -1,0 +1,29 @@
+# playbook.yml
+
+---
+- name: Install Apache
+  hosts: web_servers
+  become: yes  # Run tasks with sudo (root) privileges
+
+  tasks:
+    - name: Update package cache
+      apt:
+        update_cache: yes
+      when: ansible_pkg_mgr == 'apt'  # Check if the package manager is apt (Debian/Ubuntu)
+
+    - name: Install Apache
+      package:
+        name: apache2
+        state: present
+      when: ansible_pkg_mgr == 'apt'  # Check if the package manager is apt (Debian/Ubuntu)
+
+    - name: Start Apache service
+      service:
+        name: apache2
+        state: started
+      when: ansible_pkg_mgr == 'apt'  # Check if the package manager is apt (Debian/Ubuntu)
+
+    # Add tasks for other package managers if needed (e.g., yum for CentOS)
+
+...
+
